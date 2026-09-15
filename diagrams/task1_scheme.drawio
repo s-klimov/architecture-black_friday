@@ -1,0 +1,601 @@
+<mxfile host="Electron" modified="2026-09-13T00:00:00.000Z" agent="claude-code" version="24.6.4" type="device">
+  <diagram name="1. Sharding" id="p1-sharding">
+    <mxGraphModel dx="954" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p1-api" value="pymongo-api" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-mongos" value="mongos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="280" y="280" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-configsrv" value="configSrv" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="540" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-shard1" value="shard1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-shard2" value="shard2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1-api" target="p1-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1-mongos" target="p1-configsrv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1-mongos" target="p1-shard1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1-mongos" target="p1-shard2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-note" value="Шардирование: mongos маршрутизирует запросы по 2 шардам на основе shard key. configSrv хранит метаданные распределения данных по шардам. Пока без репликации — по 1 инстансу на роль." style="text;html=1;align=left;valign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="560" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="2. Replication" id="p2-replication">
+    <mxGraphModel dx="954" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p2-api" value="pymongo-api" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-mongos" value="mongos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="300" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-grp-cfg" value="Replica Set: configSrv" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="40" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-cfg1" value="configSrv-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="540" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-cfg2" value="configSrv-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="650" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-cfg3" value="configSrv-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="760" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-grp-s1" value="Replica Set: shard1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="220" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-s1-1" value="shard1-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-s1-2" value="shard1-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="650" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-s1-3" value="shard1-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="760" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-grp-s2" value="Replica Set: shard2" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="400" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-s2-1" value="shard2-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-s2-2" value="shard2-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="650" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-s2-3" value="shard2-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="760" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2-api" target="p2-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2-mongos" target="p2-cfg1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2-mongos" target="p2-s1-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2-mongos" target="p2-s2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-r-cfg1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p2-cfg1" target="p2-cfg2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-r-cfg2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p2-cfg1" target="p2-cfg3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-r-s1-1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p2-s1-1" target="p2-s1-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-r-s1-2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p2-s1-1" target="p2-s1-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-r-s2-1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p2-s2-1" target="p2-s2-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-r-s2-2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p2-s2-1" target="p2-s2-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2-note" value="Репликация: у configSrv и у каждого шарда — реплика-сет из 3 узлов (1 primary + 2 secondary). mongos пишет/читает через primary; пунктир — репликация внутри набора. Отказ primary → автоматические выборы нового primary внутри набора." style="text;html=1;align=left;valign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="600" width="880" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="3. Caching" id="p3-caching">
+    <mxGraphModel dx="954" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p3-api" value="pymongo-api" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-redis" value="redis" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="70" y="440" width="100" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-mongos" value="mongos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="300" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-grp-cfg" value="Replica Set: configSrv" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="40" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-cfg1" value="configSrv-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="540" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-cfg2" value="configSrv-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="650" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-cfg3" value="configSrv-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="760" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-grp-s1" value="Replica Set: shard1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="220" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-s1-1" value="shard1-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-s1-2" value="shard1-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="650" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-s1-3" value="shard1-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="760" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-grp-s2" value="Replica Set: shard2" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="400" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-s2-1" value="shard2-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-s2-2" value="shard2-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="650" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-s2-3" value="shard2-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="760" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-e-cache" value="1. get/set" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p3-api" target="p3-redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-e1" value="2. miss" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p3-api" target="p3-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p3-mongos" target="p3-cfg1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p3-mongos" target="p3-s1-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p3-mongos" target="p3-s2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-r-cfg1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p3-cfg1" target="p3-cfg2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-r-cfg2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p3-cfg1" target="p3-cfg3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-r-s1-1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p3-s1-1" target="p3-s1-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-r-s1-2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p3-s1-1" target="p3-s1-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-r-s2-1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p3-s2-1" target="p3-s2-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-r-s2-2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p3-s2-1" target="p3-s2-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3-note" value="Кеширование: pymongo-api сначала обращается в redis (1). При отсутствии ключа в кеше (2, cache miss) идёт запрос в mongos; полученный результат кладётся в redis с TTL. Это снижает нагрузку на MongoDB для часто повторяющихся read-запросов." style="text;html=1;align=left;valign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="600" width="880" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="4. Service Discovery + API Gateway" id="p4-gateway">
+    <mxGraphModel dx="954" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p4-users" value="Пользователи" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="270" width="40" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-gw" value="API Gateway&#10;(nginx)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="140" y="270" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-api1" value="pymongo-api-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="350" y="150" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-api2" value="pymongo-api-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="350" y="275" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-api3" value="pymongo-api-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="350" y="400" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-redis" value="redis" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="570" y="540" width="100" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-mongos" value="mongos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="570" y="275" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-grp-consul" value="Service Discovery: Consul (кластер)" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="120" y="590" width="420" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-consul1" value="consul-1&#10;(Leader)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="140" y="630" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-consul2" value="consul-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="630" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-consul3" value="consul-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="400" y="630" width="110" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-grp-cfg" value="Replica Set: configSrv" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="760" y="40" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-cfg1" value="configSrv-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="780" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-cfg2" value="configSrv-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="880" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-cfg3" value="configSrv-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="980" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-grp-s1" value="Replica Set: shard1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="760" y="220" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-s1-1" value="shard1-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="780" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-s1-2" value="shard1-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="880" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-s1-3" value="shard1-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="980" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-grp-s2" value="Replica Set: shard2" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="760" y="400" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-s2-1" value="shard2-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="780" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-s2-2" value="shard2-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="880" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-s2-3" value="shard2-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="980" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-users" value="HTTP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;" edge="1" parent="1" source="p4-users" target="p4-gw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-gw1" value="балансировка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-gw" target="p4-api1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-gw2" value="балансировка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-gw" target="p4-api2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-gw3" value="балансировка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-gw" target="p4-api3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-gw-consul" value="список живых инстансов" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-gw" target="p4-consul1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-reg1" value="регистрация,&#10;health-check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api1" target="p4-consul2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-reg2" value="регистрация,&#10;health-check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api2" target="p4-consul3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-reg3" value="регистрация,&#10;health-check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api3" target="p4-consul1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-raft1" value="raft" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-consul1" target="p4-consul2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-raft2" value="raft" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-consul2" target="p4-consul3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-cache1" value="get/set" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api3" target="p4-redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-cache2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api2" target="p4-redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-m1" value="запросы к MongoDB" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api1" target="p4-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-m2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api2" target="p4-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-m3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="p4-api3" target="p4-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-e-cfg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p4-mongos" target="p4-cfg1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-sh1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p4-mongos" target="p4-s1-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-e-sh2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p4-mongos" target="p4-s2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-r-cfg1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-cfg1" target="p4-cfg2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-r-cfg2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-cfg1" target="p4-cfg3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-r-s1-1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-s1-1" target="p4-s1-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-r-s1-2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-s1-1" target="p4-s1-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-r-s2-1" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-s2-1" target="p4-s2-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-r-s2-2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=10;" edge="1" parent="1" source="p4-s2-1" target="p4-s2-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4-note" value="Горизонтальное масштабирование: запросы пользователей приходят на API Gateway (nginx), который распределяет их между инстансами pymongo-api. Каждый инстанс при старте регистрируется в Consul и отвечает на health-check, а Gateway берёт из Consul актуальный список живых инстансов. Благодаря этому инстансы можно добавлять и убирать без ручной правки конфигурации балансировщика и без простоя сайта." style="text;html=1;align=left;valign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="570" y="680" width="570" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="5. CDN" id="p5-cdn">
+    <mxGraphModel dx="954" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p5-grp-eu" value="Регион: Европа" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="270" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-user-eu" value="Пользователи&#10;(Европа)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="95" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-cdn-eu" value="CDN&#10;(Европа)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="150" y="95" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-grp-as" value="Регион: Азия" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="20" y="220" width="270" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-user-as" value="Пользователи&#10;(Азия)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="255" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-cdn-as" value="CDN&#10;(Азия)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="150" y="255" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-grp-am" value="Регион: Америка" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="20" y="380" width="270" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-user-am" value="Пользователи&#10;(Америка)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="415" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-cdn-am" value="CDN&#10;(Америка)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="150" y="415" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-gw" value="API Gateway&#10;(nginx)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="360" y="250" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-api1" value="pymongo-api-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="580" y="80" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-api2" value="pymongo-api-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="580" y="250" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-api3" value="pymongo-api-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="580" y="420" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-mongos" value="mongos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="820" y="250" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-redis" value="redis" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="830" y="430" width="100" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-grp-consul" value="Service Discovery: Consul (кластер)" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="340" y="620" width="420" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-consul1" value="consul-1&#10;(Leader)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="360" y="660" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-consul2" value="consul-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="490" y="660" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-consul3" value="consul-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="620" y="660" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-grp-cfg" value="Replica Set: configSrv" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1000" y="40" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-cfg1" value="configSrv-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-cfg2" value="configSrv-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-cfg3" value="configSrv-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-grp-s1" value="Replica Set: shard1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1000" y="220" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-s11" value="shard1-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-s12" value="shard1-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-s13" value="shard1-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="260" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-grp-s2" value="Replica Set: shard2" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fillColor=none;strokeColor=#999999;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1000" y="400" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-s21" value="shard2-1&#10;(Primary)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-s22" value="shard2-2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-s23" value="shard2-3" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="440" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-u-eu" value="статика из&#10;ближайшего CDN" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-user-eu" target="p5-cdn-eu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-u-as" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-user-as" target="p5-cdn-as">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-u-am" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-user-am" target="p5-cdn-am">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-cdn-eu" value="cache miss:&#10;запрос статики к origin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-cdn-eu" target="p5-gw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-cdn-as" value="динамика" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-cdn-as" target="p5-gw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-cdn-am" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-cdn-am" target="p5-gw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-gw1" value="балансировка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-gw" target="p5-api1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-gw2" value="балансировка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-gw" target="p5-api2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-gw3" value="балансировка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-gw" target="p5-api3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-gw-consul" value="список живых инстансов" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-gw" target="p5-consul1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-reg1" value="регистрация,&#10;health-check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api1" target="p5-consul2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-reg2" value="регистрация,&#10;health-check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api2" target="p5-consul3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-reg3" value="регистрация,&#10;health-check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api3" target="p5-consul1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-raft1" value="raft" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-consul1" target="p5-consul2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-raft2" value="raft" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-consul2" target="p5-consul3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-cache1" value="get/set" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api3" target="p5-redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-cache2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api2" target="p5-redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-m1" value="запросы к MongoDB" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api1" target="p5-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-m2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api2" target="p5-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-m3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-api3" target="p5-mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-cfg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-mongos" target="p5-cfg1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-mongos" target="p5-s11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-e-s2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p5-mongos" target="p5-s21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-r-cfg2" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-cfg1" target="p5-cfg2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-r-cfg3" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-cfg1" target="p5-cfg3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-r-s12" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-s11" target="p5-s12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-r-s13" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-s11" target="p5-s13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-r-s22" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-s21" target="p5-s22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-r-s23" value="replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p5-s21" target="p5-s23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-note" value="CDN: статический контент магазина (картинки товаров, css, js) раздаётся с ближайшего к пользователю узла CDN. Если в кеше узла нужного файла нет, CDN запрашивает его у origin — API Gateway, который проксирует запрос на инстансы pymongo-api, и кладёт ответ в свой кеш. Динамические запросы идут тем же путём, но без кеширования. За счёт этого статика доставляется быстрее, а нагрузка на API Gateway и приложение снижается." style="text;html=1;align=left;valign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="820" y="620" width="560" height="140" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
